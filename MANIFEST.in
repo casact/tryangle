@@ -1,0 +1,10 @@
+include LICENSE
+include requirements.txt
+include README.md
+
+include src/tryangle/utils/data/cas_test.csv
+include src/tryangle/utils/data/cas_train.csv
+include src/tryangle/utils/data/sme_test.csv
+include src/tryangle/utils/data/sme_train.csv
+include src/tryangle/utils/data/swiss_test.csv
+include src/tryangle/utils/data/swiss_train.csv
