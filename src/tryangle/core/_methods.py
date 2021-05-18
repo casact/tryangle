@@ -6,6 +6,7 @@ from chainladder.development import Development as DevelopmentCL
 from chainladder.methods import BornhuetterFerguson as BornhuetterFergusonCL
 from chainladder.methods import CapeCod as CapeCodCL
 from chainladder.methods import Chainladder as ChainladderCL
+from chainladder.methods import Benktander as BenktanderCL
 from chainladder.workflow import VotingChainladder as VotingChainladderCL
 from tryangle.core._base import TryangleData
 
@@ -82,6 +83,13 @@ class CapeCod(EstimatorMixin, CapeCodCL):
 
     def __init__(self, trend=0, decay=1):
         super().__init__(trend=trend, decay=decay)
+
+
+class Benktander(EstimatorMixin, BenktanderCL):
+    __doc__ = BenktanderCL.__doc__
+
+    def __init__(self, apriori=1.0, n_iters=1, apriori_sigma=0, random_state=None):
+        super().__init__(apriori=1.0, n_iters=1, apriori_sigma=0, random_state=None)
 
 
 class VotingChainladder(EstimatorMixin, VotingChainladderCL):

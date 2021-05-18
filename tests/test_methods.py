@@ -5,6 +5,7 @@
 import pytest
 from sklearn.pipeline import Pipeline
 from tryangle.core._methods import (
+    Benktander,
     BornhuetterFerguson,
     CapeCod,
     Chainladder,
@@ -13,11 +14,7 @@ from tryangle.core._methods import (
 )
 from tryangle.utils.datasets import load_sample
 
-base_estimators = [
-    Chainladder,
-    BornhuetterFerguson,
-    CapeCod,
-]
+base_estimators = [Chainladder, BornhuetterFerguson, CapeCod, Benktander]
 
 base_transformers = [Development]
 
@@ -51,8 +48,5 @@ def test_voting_estimator(sample_data):
 
 def test_pipeline(sample_data):
     X = sample_data
-    pipe = Pipeline([
-        ('development', Development()),
-        ('cl', Chainladder())
-    ])
+    pipe = Pipeline([("development", Development()), ("cl", Chainladder())])
     pipe.fit_predict(X)
