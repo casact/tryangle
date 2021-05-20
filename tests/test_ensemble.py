@@ -8,10 +8,10 @@ from distutils import dir_util
 import numpy as np
 import pytest
 from chainladder.utils import load_sample
-from tryangle.core._base import TryangleData
-from tryangle.core._methods import BornhuetterFerguson, CapeCod, Chainladder
-from tryangle.ensemble._base import AutoEnsemble
-from tryangle.model_selection._split import TriangleSplit
+from tryangle.core.base import TryangleData
+from tryangle.core.methods import BornhuetterFerguson, CapeCod, Chainladder
+from tryangle.ensemble.base import AutoEnsemble
+from tryangle.model_selection.split import TriangleSplit
 
 
 @pytest.fixture

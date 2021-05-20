@@ -4,14 +4,14 @@
 
 import pytest
 import chainladder as cl
-from tryangle.metrics._score import (
+from tryangle.metrics.score import (
     neg_ave_scorer,
     neg_weighted_ave_scorer,
     neg_cdr_scorer,
     neg_weighted_cdr_scorer,
 )
-from tryangle.core._base import TryangleData
-from tryangle.core._methods import Chainladder
+from tryangle.core.base import TryangleData
+from tryangle.core.methods import Chainladder
 
 
 @pytest.mark.parametrize(

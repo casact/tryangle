@@ -7,8 +7,8 @@ from chainladder.workflow.voting import _BaseTriangleEnsemble
 from sklearn.base import clone
 from sklearn.ensemble._base import _fit_single_estimator
 from sklearn.utils.validation import _deprecate_positional_args
-from tryangle.ensemble._optimizers import Adam
-from tryangle.metrics._base import get_expected
+from tryangle.ensemble.optimizers import Adam
+from tryangle.metrics.base import get_expected
 
 
 class AutoEnsemble(_BaseTriangleEnsemble):

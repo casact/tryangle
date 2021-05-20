@@ -6,8 +6,8 @@
 The :mod:`tryangle.metrics` module includes scoring metrics used
 when finding the optimal reserving parameters.
 """
-from tryangle.metrics._base import * # noqa (API Import)
-from tryangle.metrics._score import ( # noqa (API Import)
+from tryangle.metrics.base import * # noqa (API Import)
+from tryangle.metrics.score import ( # noqa (API Import)
     neg_ave_scorer,
     neg_cdr_scorer,
     neg_weighted_ave_scorer,

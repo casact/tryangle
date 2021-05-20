@@ -5,9 +5,9 @@
 import pytest
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from sklearn.utils.validation import check_is_fitted
-from tryangle.model_selection._split import TriangleSplit
-from tryangle.core._methods import CapeCod
-from tryangle.metrics._score import neg_ave_scorer
+from tryangle.model_selection.split import TriangleSplit
+from tryangle.core.methods import CapeCod
+from tryangle.metrics.score import neg_ave_scorer
 from tryangle.utils.datasets import load_sample
 
 

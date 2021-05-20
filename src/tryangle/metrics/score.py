@@ -4,7 +4,7 @@
 
 import numpy as np
 
-from tryangle.metrics._base import get_actual_expected
+from tryangle.metrics.base import get_actual_expected
 
 from sklearn.metrics._scorer import _BaseScorer
 from sklearn.metrics import mean_squared_error

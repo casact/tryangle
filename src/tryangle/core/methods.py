@@ -8,7 +8,7 @@ from chainladder.methods import CapeCod as CapeCodCL
 from chainladder.methods import Chainladder as ChainladderCL
 from chainladder.methods import Benktander as BenktanderCL
 from chainladder.workflow import VotingChainladder as VotingChainladderCL
-from tryangle.core._base import TryangleData
+from tryangle.core.base import TryangleData
 
 
 class EstimatorMixin:

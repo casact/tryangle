@@ -4,7 +4,7 @@
 
 import pytest
 from sklearn.pipeline import Pipeline
-from tryangle.core._methods import (
+from tryangle.core.methods import (
     Benktander,
     BornhuetterFerguson,
     CapeCod,
