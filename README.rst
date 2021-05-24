@@ -13,7 +13,7 @@ Tryangle is flexible and modular in how it can be applied:
 
 - Optimising loss development factors
 
-  - Use `*sklearn*'s <https://scikit-learn.org/>`__ `GridSearchCV` or `RandomizedSearchCV` to
+  - Use `sklearn's <https://scikit-learn.org/>`__ `GridSearchCV` or `RandomizedSearchCV` to
     find the optimal method to calculate loss development factors
 
 - Choosing between multiple reserving methods

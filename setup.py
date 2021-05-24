@@ -13,7 +13,7 @@ version = "0.1.0"  # Put this in __init__.py
 with open("requirements.txt", "r") as f:
     dependencies = f.read().splitlines()
 
-with open("README.md") as f:
+with open("README.rst") as f:
     long_desc = f.read()
 
 setup(
