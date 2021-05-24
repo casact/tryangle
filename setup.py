@@ -25,7 +25,6 @@ setup(
     package_dir={"": "src"},
     scripts=[],
     url=url,
-    download_url=f"{url}/archive/v{version}.tar.gz",
     license="MPL-2.0",
     description=descr,
     long_description=long_desc,
@@ -36,8 +35,6 @@ setup(
     classifiers=[
         "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
-        "Development Status :: 3 - Alpha",
         "Intended Audience :: Financial and Insurance Industry",
         "Intended Audience :: Science/Research",
         "Operating System :: OS Independent",
