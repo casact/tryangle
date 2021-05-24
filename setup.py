@@ -29,7 +29,19 @@ setup(
     license="MPL-2.0",
     description=descr,
     long_description=long_desc,
+    long_description_content_type="text/x-rst",
     install_requires=dependencies,
     include_package_data=True,
-    package_data={'data': [item for item in os.listdir("src/tryangle/utils/data")]}
+    package_data={'data': [item for item in os.listdir("src/tryangle/utils/data")]},
+    classifiers=[
+        "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Financial and Insurance Industry",
+        "Intended Audience :: Science/Research",
+        "Operating System :: OS Independent",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Topic :: Office/Business :: Financial",
+    ],
 )
