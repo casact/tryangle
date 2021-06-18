@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 descr = "Tryangle Package - Scientific P&C Loss Reserving"
 name = "tryangle"
 url = "https://github.com/casact/tryangle"
-version = "0.1.0.post1"  # Put this in __init__.py
+version = "0.1.0.post2"  # Put this in __init__.py
 
 with open("requirements.txt", "r") as f:
     dependencies = f.read().splitlines()
@@ -31,7 +31,7 @@ setup(
     long_description_content_type="text/x-rst",
     install_requires=dependencies,
     include_package_data=True,
-    package_data={'data': [item for item in os.listdir("src/tryangle/utils/data")]},
+    package_data={"data": [item for item in os.listdir("src/tryangle/utils/data")]},
     classifiers=[
         "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
         "Programming Language :: Python :: 3",
