@@ -102,5 +102,5 @@ class VotingChainladder(EstimatorMixin, VotingChainladderCL):
             for name, estimator in estimators
         ]
         super().__init__(
-            estimators=estimators, weights=weights, default_weighting=None, n_jobs=n_jobs, verbose=verbose
+            estimators=estimators, weights=weights, default_weighting=default_weighting, n_jobs=n_jobs, verbose=verbose
         )
