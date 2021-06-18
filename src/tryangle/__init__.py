@@ -5,4 +5,4 @@
 from tryangle.core import * # noqa (API import)
 from tryangle.metrics import * # noqa (API import)
 
-__version__ = "0.1.0"
+__version__ = "0.1.0.post1"

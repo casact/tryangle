@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 descr = "Tryangle Package - Scientific P&C Loss Reserving"
 name = "tryangle"
 url = "https://github.com/casact/tryangle"
-version = "0.1.0"  # Put this in __init__.py
+version = "0.1.0.post1"  # Put this in __init__.py
 
 with open("requirements.txt", "r") as f:
     dependencies = f.read().splitlines()
