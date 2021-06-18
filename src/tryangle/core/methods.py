@@ -95,10 +95,12 @@ class Benktander(EstimatorMixin, BenktanderCL):
 class VotingChainladder(EstimatorMixin, VotingChainladderCL):
     __doc__ = VotingChainladderCL.__doc__
 
-    def __init__(self, estimators, weights=None, n_jobs=None, verbose=False):
+    def __init__(self, estimators, weights=None, default_weighting=None, n_jobs=None, verbose=False):
         # Convert tryangle estimators to chainladder estimators
         estimators = [
             (name, globals()[f"{estimator.__class__.__name__}CL"](**estimator.__dict__))
             for name, estimator in estimators
         ]
-        super().__init__(estimators, weights=None, n_jobs=None, verbose=False)
+        super().__init__(
+            estimators=estimators, weights=weights, default_weighting=None, n_jobs=n_jobs, verbose=verbose
+        )
