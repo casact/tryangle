@@ -65,12 +65,12 @@ Installation
 
 Tryangle is available at `the Python Package Index <https://pypi.org/project/tryangle/>`__.
 
-.. code-block:: bash
-  # PyPI
-  $ pip install tryangle
+.. code-block:: console
+
+    pip install tryangle
 
 
-Tryangle supports Python 3.8.
+Tryangle supports Python 3.8 and 3.9.
 
 Reference
 ---------
