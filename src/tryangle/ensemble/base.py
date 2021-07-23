@@ -9,6 +9,7 @@ from sklearn.ensemble._base import _fit_single_estimator
 from sklearn.utils.validation import _deprecate_positional_args
 from tryangle.ensemble.optimizers import Adam
 from tryangle.metrics.base import get_expected
+from tryangle.ensemble.losses import LOSS_FUNCTIONS
 
 
 class AutoEnsemble(_BaseTriangleEnsemble):
@@ -109,6 +110,7 @@ class AutoEnsemble(_BaseTriangleEnsemble):
         initial_weight=None,
         initial_bias=None,
         weight_function="linear",
+        loss="mse",
         random_state=None,
         n_jobs=None,
         verbose=False,
@@ -122,6 +124,7 @@ class AutoEnsemble(_BaseTriangleEnsemble):
         self.initial_weight = initial_weight
         self.initial_bias = initial_bias
         self.weight_function = weight_function
+        self.loss = loss
         self.random_state = random_state
         self.n_jobs = n_jobs
         self.verbose = verbose
@@ -258,7 +261,6 @@ class AutoEnsemble(_BaseTriangleEnsemble):
         self._output = np.zeros(self.actual_.shape)
         self.origin_dim = self.actual_.shape[1]
 
-
         if self.verbose:
             print()
 
@@ -279,18 +281,6 @@ class AutoEnsemble(_BaseTriangleEnsemble):
         rhs_jacobian = np.einsum("fij,kif->fijk", self._softmax(x), self._softmax(x).T)
         return lhs_jacobian - rhs_jacobian
 
-    def _loss(self, y_pred, y_true):
-        return ((y_pred - y_true) ** 2).mean()
-
-    def _loss_gradient(self, y_pred, y_true):
-        return 2 * (y_pred - y_true)
-
-    # def _loss(self, y_pred, y_true):
-    #     return (np.abs(y_pred - y_true) / y_true).mean()
-
-    # def _loss_gradient(self, y_pred, y_true):
-    #     return np.sign(y_pred - y_true) * (y_pred / ((y_true + 1e-2) ** 2)) * -1
-
     def dense(self, t):
         if self.weight_function is None:
             return t * self.weights + self.biases
@@ -299,10 +289,7 @@ class AutoEnsemble(_BaseTriangleEnsemble):
         elif self.weight_function[:4] == "poly":
             return (
                 sum(
-                    [
-                        t ** (n + 1) * self.weights
-                        for n in range(self.weight_polynomial)
-                    ]
+                    [t ** (n + 1) * self.weights for n in range(self.weight_polynomial)]
                 )
                 + self.biases
             )
@@ -329,8 +316,8 @@ class AutoEnsemble(_BaseTriangleEnsemble):
     def output(self, expected, activation):
         return (expected * activation).sum(axis=2, keepdims=True)
 
-    def loss(self, output, actual):
-        return ((output - actual) ** 2).mean()
+    def compute_loss(self, output, actual):
+        return self.Loss()._loss(output, actual)
 
     def forward_pass(self, actual, expected, t, text_file=None):
         if self.verbose > 2:
@@ -338,14 +325,14 @@ class AutoEnsemble(_BaseTriangleEnsemble):
         self._dense = self.dense(t)
         self._activation = self.activation(self._dense)
         self._output = self.output(expected, self._activation)
-        self._loss = self.loss(self._output, actual)
+        self._compute_loss = self.compute_loss(self._output, actual)
         if self.verbose > 2:
-            print("Loss: ", self._loss, file=text_file)
+            print("Loss: ", self._compute_loss, file=text_file)
 
         return self
 
     def backward_pass(self, actual, expected, t, epoch, text_file):
-        dLdy = self._loss_gradient(self._output, actual)
+        dLdy = self.Loss()._loss_gradient(self._output, actual)
         dyds = expected
         dsdd = self._softmax_gradient(self._dense)
         dddw = self._dense_gradient(t)
@@ -380,9 +367,10 @@ class AutoEnsemble(_BaseTriangleEnsemble):
                 + f"lr: {self.optimizer._learning_rate:.8f}"
             )
 
-    def fit(self, X, y=None, sample_weight=None, text_file=None):
+    def fit(self, X, y=None, sample_weight=None, loss="mse", text_file=None):
 
         self.compile(X, y, sample_weight)
+        self.Loss = LOSS_FUNCTIONS[self.loss]
 
         if self.verbose:
             print("[Training]\n")
@@ -447,7 +435,9 @@ class AutoEnsemble(_BaseTriangleEnsemble):
             weights.append(self.weights)
             biases.append(self.biases)
 
-            eval_loss = self.loss(self._predict(expected_test, t_test), actual_test)
+            eval_loss = self.compute_loss(
+                self._predict(expected_test, t_test), actual_test
+            )
             eval_loss = eval_loss / actual_test.mean()
             eval_losses.append(eval_loss)
 
@@ -475,4 +465,4 @@ class AutoEnsemble(_BaseTriangleEnsemble):
     def evaluate(self, X, y=None, sample_weight=None):
         actual, expected, t = self.preprocess(X, y, sample_weight)
         output = self._predict(expected, t)
-        return self.loss(output, actual)
+        return self.compute_loss(output, actual)
