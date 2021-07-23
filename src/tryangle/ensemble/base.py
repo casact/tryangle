@@ -96,7 +96,7 @@ class AutoEnsemble(_BaseTriangleEnsemble):
         optimizer=Adam(),
         initial_weight=None,
         initial_bias=None,
-        # random_state=None,
+        random_state=None,
         n_jobs=None,
         verbose=False,
         dropout=False,
@@ -109,7 +109,7 @@ class AutoEnsemble(_BaseTriangleEnsemble):
         self.optimizer = optimizer
         self.initial_weight = initial_weight
         self.initial_bias = initial_bias
-        # self.random_state = random_state
+        self.random_state = random_state
         self.n_jobs = n_jobs
         self.verbose = verbose
         self.dropout = dropout
@@ -122,6 +122,7 @@ class AutoEnsemble(_BaseTriangleEnsemble):
 
     def initialize_weights(self):
         if self.initial_weight is None:
+            np.random.seed(self.random_state)
             self.weights = np.random.normal(
                 0,
                 np.sqrt(2 / (2 * len(self.estimators))),
@@ -130,7 +131,7 @@ class AutoEnsemble(_BaseTriangleEnsemble):
         else:
             self.weights = self.initial_weight
         if self.initial_bias is None:
-            self.biases = np.zeros((1, len(self.estimators)))
+            np.random.seed(self.random_state)
         else:
             self.biases = self.initial_bias
 
