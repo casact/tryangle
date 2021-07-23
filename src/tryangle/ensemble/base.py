@@ -390,10 +390,8 @@ class AutoEnsemble(_BaseTriangleEnsemble):
             eval_loss = eval_loss / actual_test.mean()
             eval_losses.append(eval_loss)
 
-        self.weights = np.average(
-            np.stack(weights, axis=1), axis=1, weights=eval_losses
-        )
-        self.biases = np.average(np.stack(biases, axis=1), axis=1, weights=eval_losses)
+        self.weights = np.average(np.stack(weights, axis=1), axis=1)
+        self.biases = np.average(np.stack(biases, axis=1), axis=1)
 
         self.weights_ = self._activation[-1]
 
