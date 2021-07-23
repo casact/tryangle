@@ -48,6 +48,18 @@ class AutoEnsemble(_BaseTriangleEnsemble):
     initial_bias : ndarray of shape (1, num_estimators), default=None
         Force the initial biases instead of using a random initialization
 
+    weight_function : 'linear', 'poly(n)', or None, default='linear'
+        Specify a function to constrain the voting weights.
+        ``poly(n)`` will fit an n-term polynomial:
+        t^n * w + t^(n-1) * w + ... + t^(2) * w + t * w + b
+        where t is the origin period, w is the weight, and b is the bias
+        ``linear`` is equivalent to ``poly(1)``
+        ``None`` will not constrain the weights meaning each origin period
+        will have its own vector of weights.
+
+    random_state : int or None, default=None
+        Specify the seed for random weight and bias initialization.
+
     n_jobs : int, default=None
         Number of jobs to run in parallel
         ``None`` means 1.
@@ -86,16 +98,17 @@ class AutoEnsemble(_BaseTriangleEnsemble):
 
     ``AutoEnsemble`` is still experimental and may change with future versions.
     """
+
     @_deprecate_positional_args
     def __init__(
         self,
         estimators,
         cv,
-        # voting="soft",
         max_iter=1000,
         optimizer=Adam(),
         initial_weight=None,
         initial_bias=None,
+        weight_function="linear",
         random_state=None,
         n_jobs=None,
         verbose=False,
@@ -104,11 +117,11 @@ class AutoEnsemble(_BaseTriangleEnsemble):
     ):
         self.estimators = estimators
         self.cv = cv
-        # self.voting = voting
         self.max_iter = max_iter
         self.optimizer = optimizer
         self.initial_weight = initial_weight
         self.initial_bias = initial_bias
+        self.weight_function = weight_function
         self.random_state = random_state
         self.n_jobs = n_jobs
         self.verbose = verbose
@@ -121,17 +134,34 @@ class AutoEnsemble(_BaseTriangleEnsemble):
         return "(%d of %d) Processing %s" % (idx, total, name)
 
     def initialize_weights(self):
+        if self.weight_function is None:
+            weight_dim = self.origin_dim
+        elif self.weight_function == "linear":
+            weight_dim = 1
+        elif "poly" in self.weight_function:
+            self.weight_polynomial = int(
+                self.weight_function[
+                    self.weight_function.find("(") + 1 : self.weight_function.find(")")
+                ]
+            )
+            weight_dim = 1
+        else:
+            raise Exception(
+                "Unknown weight function provided. Options are None, linear, or poly(n)."
+            )
+
         if self.initial_weight is None:
             np.random.seed(self.random_state)
             self.weights = np.random.normal(
                 0,
                 np.sqrt(2 / (2 * len(self.estimators))),
-                size=(1, len(self.estimators)),
+                size=(weight_dim, len(self.estimators)),
             )
         else:
             self.weights = self.initial_weight
         if self.initial_bias is None:
             np.random.seed(self.random_state)
+            self.biases = np.zeros((weight_dim, len(self.estimators)))
         else:
             self.biases = self.initial_bias
 
@@ -226,6 +256,8 @@ class AutoEnsemble(_BaseTriangleEnsemble):
             / self.actual_.shape[1]
         )
         self._output = np.zeros(self.actual_.shape)
+        self.origin_dim = self.actual_.shape[1]
+
 
         if self.verbose:
             print()
@@ -260,7 +292,36 @@ class AutoEnsemble(_BaseTriangleEnsemble):
     #     return np.sign(y_pred - y_true) * (y_pred / ((y_true + 1e-2) ** 2)) * -1
 
     def dense(self, t):
+        if self.weight_function is None:
+            return t * self.weights + self.biases
+        elif self.weight_function == "linear":
         return np.matmul(t, self.weights) + self.biases
+        elif self.weight_function[:4] == "poly":
+            return (
+                sum(
+                    [
+                        t ** (n + 1) * self.weights
+                        for n in range(self.weight_polynomial)
+                    ]
+                )
+                + self.biases
+            )
+        else:
+            raise Exception(
+                "Unknown weight function provided. Options are None, linear, or poly(n)."
+            )
+
+    def _dense_gradient(self, t):
+        if self.weight_function is None:
+            return t
+        elif self.weight_function == "linear":
+            return t
+        elif self.weight_function[:4] == "poly":
+            return sum([(n + 1) * t ** (n) for n in range(self.weight_polynomial)])
+        else:
+            raise Exception(
+                "Unknown weight function provided. Options are None, linear, or poly(n)."
+            )
 
     def activation(self, x):
         return self._softmax(x)
@@ -287,7 +348,7 @@ class AutoEnsemble(_BaseTriangleEnsemble):
         dLdy = self._loss_gradient(self._output, actual)
         dyds = expected
         dsdd = self._softmax_gradient(self._dense)
-        dddw = t
+        dddw = self._dense_gradient(t)
         dddb = np.ones(t.shape)
 
         dLdd = np.einsum("fkij,fkj->fki", dsdd, dLdy * dyds)
