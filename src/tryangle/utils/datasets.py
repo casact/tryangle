@@ -19,21 +19,21 @@ def load_sample(key, *args, **kwargs):
     """
     path = os.path.dirname(os.path.abspath(__file__))
 
-    if key not in ["swiss", "cas", "sme"]:
+    if key in ["swiss", "cas", "sme"]:
+        df = pd.read_csv(os.path.join(path, "data", key.lower() + "_train.csv"))
+        sample_weight = df[["origin", "premium"]].drop_duplicates()
+        columns = ["claim"]
+    else:
         raise KeyError(
             "No such dataset exists. Available datasets are 'swiss', 'cas' and 'sme'."
         )
-
-    df = pd.read_csv(os.path.join(path, "data", key.lower() + "_train.csv"))
-
-    sample_weight = df[["origin", "premium"]].drop_duplicates()
 
     claim = Triangle(
         df,
         origin="origin",
         development="development",
         index=None,
-        columns=["claim"],
+        columns=columns,
         cumulative=True,
         *args,
         **kwargs

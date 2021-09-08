@@ -3,20 +3,36 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 import pytest
+import numpy as np
 from sklearn.pipeline import Pipeline
 from tryangle.core.methods import (
     Benktander,
     BornhuetterFerguson,
     CapeCod,
     Chainladder,
+    ClarkLDF,
+    MackChainladder,
     Development,
+    DevelopmentConstant,
+    IncrementalAdditive,
     VotingChainladder,
 )
 from tryangle.utils.datasets import load_sample
 
-base_estimators = [Chainladder, BornhuetterFerguson, CapeCod, Benktander]
+base_estimators = [
+    Chainladder,
+    MackChainladder,
+    BornhuetterFerguson,
+    CapeCod,
+    Benktander,
+]
 
-base_transformers = [Development]
+base_transformers = [
+    Development,
+    DevelopmentConstant,
+    IncrementalAdditive,
+    ClarkLDF,
+]
 
 
 @pytest.fixture
@@ -27,13 +43,23 @@ def sample_data():
 @pytest.mark.parametrize("estimator", base_estimators)
 def test_estimators(estimator, sample_data):
     X = sample_data
+
     estimator().fit_predict(X)
 
 
 @pytest.mark.parametrize("transformer", base_transformers)
 def test_transformers(transformer, sample_data):
     X = sample_data
-    transformer().fit_transform(X)
+    kwargs = {}
+
+    if isinstance(transformer(), DevelopmentConstant):
+        n = len(sample_data.triangle.development)
+        x = np.linspace(1, n, n)
+        ldf = 1 - np.exp(-x)
+        print(x)
+        kwargs.update({"patterns": {(i + 1) * 12: l for i, l in enumerate(ldf)}})
+
+    transformer(**kwargs).fit_transform(X)
 
 
 def test_voting_estimator(sample_data):
