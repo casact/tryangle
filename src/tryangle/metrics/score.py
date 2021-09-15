@@ -10,10 +10,10 @@ from sklearn.metrics._scorer import _BaseScorer
 from sklearn.metrics import mean_squared_error
 
 
-class _AVEScorer(_BaseScorer):
+class AVEScore(_BaseScorer):
     """Base AvE scoring class"""
 
-    def __init__(self, score_func, sign, kwargs, weighted=False):
+    def __init__(self, score_func=mean_squared_error, sign=-1, kwargs={"squared": False}, weighted=False):
         self.weighted = weighted
         super().__init__(score_func, sign, kwargs)
 
@@ -39,7 +39,7 @@ class _AVEScorer(_BaseScorer):
             return self._sign * self._score_func(actual, expected, **self._kwargs)
 
 
-class _CDRScorer(_AVEScorer):
+class CDRScore(AVEScore):
     """Base CDR scoring class"""
 
     def _score(self, method_caller, estimator, X, y_true, sample_weight=None):
@@ -69,11 +69,7 @@ class _CDRScorer(_AVEScorer):
             )
 
 
-neg_ave_scorer = _AVEScorer(mean_squared_error, sign=-1, kwargs={"squared": False})
-neg_weighted_ave_scorer = _AVEScorer(
-    mean_squared_error, sign=-1, weighted=True, kwargs={"squared": False}
-)
-neg_cdr_scorer = _CDRScorer(mean_squared_error, sign=-1, kwargs={"squared": False})
-neg_weighted_cdr_scorer = _CDRScorer(
-    mean_squared_error, sign=-1, weighted=True, kwargs={"squared": False}
-)
+neg_ave_scorer = AVEScore()
+neg_weighted_ave_scorer = AVEScore(weighted=True)
+neg_cdr_scorer = CDRScore()
+neg_weighted_cdr_scorer = CDRScore(weighted=True)
