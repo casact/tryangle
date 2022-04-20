@@ -70,7 +70,7 @@ Tryangle is available at `the Python Package Index <https://pypi.org/project/try
     pip install tryangle
 
 
-Tryangle supports Python 3.8 and 3.9.
+Tryangle supports Python 3.9.
 
 Reference
 ---------

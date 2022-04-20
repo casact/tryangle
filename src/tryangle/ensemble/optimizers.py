@@ -96,8 +96,8 @@ class AdaGrad:
             model.weight_cache = np.zeros_like(model.weights)
             model.bias_cache = np.zeros_like(model.biases)
 
-        model.weight_cache += model._w_grad ** 2
-        model.bias_cache += model._b_grad ** 2
+        model.weight_cache += model._w_grad**2
+        model.bias_cache += model._b_grad**2
 
         model.weights += (
             -model.optimizer._learning_rate
@@ -153,10 +153,10 @@ class RMSProp:
             self.reset(model)
 
         model.weight_cache += (
-            self.rho * model.weight_cache + (1 - self.rho) * model._w_grad ** 2
+            self.rho * model.weight_cache + (1 - self.rho) * model._w_grad**2
         )
         model.bias_cache += (
-            self.rho * model.bias_cache + (1 - self.rho) * model._b_grad ** 2
+            self.rho * model.bias_cache + (1 - self.rho) * model._b_grad**2
         )
 
         model.weights += (
@@ -236,10 +236,10 @@ class Adam:
         )
 
         model.weight_cache += (
-            self.beta_2 * model.weight_cache + (1 - self.beta_2) * model._w_grad ** 2
+            self.beta_2 * model.weight_cache + (1 - self.beta_2) * model._w_grad**2
         )
         model.bias_cache += (
-            self.beta_2 * model.bias_cache + (1 - self.beta_2) * model._b_grad ** 2
+            self.beta_2 * model.bias_cache + (1 - self.beta_2) * model._b_grad**2
         )
 
         weight_cache_corrected = model.weight_cache / (1 - self.beta_2 ** (epoch + 1))

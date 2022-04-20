@@ -24,6 +24,6 @@ from tryangle.core.methods import Chainladder
     ],
 )
 def test_scorers(scorer, true_score):
-    X = TryangleData(cl.load_sample('raa'))
+    X = TryangleData(cl.load_sample("raa"))
     score = scorer(Chainladder(), X, X)
     assert (score - true_score) < 0.001

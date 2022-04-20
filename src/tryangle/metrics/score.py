@@ -13,7 +13,13 @@ from sklearn.metrics import mean_squared_error
 class AVEScore(_BaseScorer):
     """Base AvE scoring class"""
 
-    def __init__(self, score_func=mean_squared_error, sign=-1, kwargs={"squared": False}, weighted=False):
+    def __init__(
+        self,
+        score_func=mean_squared_error,
+        sign=-1,
+        kwargs={"squared": False},
+        weighted=False,
+    ):
         self.weighted = weighted
         super().__init__(score_func, sign, kwargs)
 

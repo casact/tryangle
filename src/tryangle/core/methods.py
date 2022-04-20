@@ -2,9 +2,20 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-import chainladder.development as cl_development
-import chainladder.methods as cl_methods
-import chainladder.workflow as cl_workflow
+from chainladder.development.clark import ClarkLDF as _cl_ClarkLDF
+from chainladder.development.constant import (
+    DevelopmentConstant as _cl_DevelopmentConstant,
+)
+from chainladder.development.development import Development as _cl_Development
+from chainladder.development.incremental import (
+    IncrementalAdditive as _cl_IncrementalAdditive,
+)
+from chainladder.methods.benktander import Benktander as _cl_Benktander
+from chainladder.methods.bornferg import BornhuetterFerguson as _cl_BornhuetterFerguson
+from chainladder.methods.capecod import CapeCod as _cl_CapeCod
+from chainladder.methods.chainladder import Chainladder as _cl_Chainladder
+from chainladder.methods.mack import MackChainladder as _cl_MackChainladder
+from chainladder.workflow.voting import VotingChainladder as _cl_VotingChainladder
 from tryangle.core.base import TryangleData
 
 
@@ -36,8 +47,8 @@ class TransformerMixin:
         return TryangleData(super().transform(X.triangle), X.sample_weight)
 
 
-class Development(TransformerMixin, cl_development.Development):
-    __doc__ = cl_development.Development.__doc__
+class Development(TransformerMixin, _cl_Development):
+    __doc__ = _cl_Development.__doc__
 
     def __init__(
         self,
@@ -62,8 +73,8 @@ class Development(TransformerMixin, cl_development.Development):
         )
 
 
-class DevelopmentConstant(TransformerMixin, cl_development.DevelopmentConstant):
-    __doc__ = cl_development.DevelopmentConstant.__doc__
+class DevelopmentConstant(TransformerMixin, _cl_DevelopmentConstant):
+    __doc__ = _cl_DevelopmentConstant.__doc__
 
     def __init__(
         self,
@@ -78,8 +89,8 @@ class DevelopmentConstant(TransformerMixin, cl_development.DevelopmentConstant):
         )
 
 
-class IncrementalAdditive(TransformerMixin, cl_development.IncrementalAdditive):
-    __doc__ = cl_development.IncrementalAdditive.__doc__
+class IncrementalAdditive(TransformerMixin, _cl_IncrementalAdditive):
+    __doc__ = _cl_IncrementalAdditive.__doc__
 
     def __init__(
         self,
@@ -104,8 +115,8 @@ class IncrementalAdditive(TransformerMixin, cl_development.IncrementalAdditive):
         )
 
 
-class ClarkLDF(TransformerMixin, cl_development.ClarkLDF):
-    __doc__ = cl_development.ClarkLDF.__doc__
+class ClarkLDF(TransformerMixin, _cl_ClarkLDF):
+    __doc__ = _cl_ClarkLDF.__doc__
 
     def __init__(self, growth="loglogistic"):
         super().__init__(
@@ -113,16 +124,16 @@ class ClarkLDF(TransformerMixin, cl_development.ClarkLDF):
         )
 
 
-class Chainladder(EstimatorMixin, cl_methods.Chainladder):
-    __doc__ = cl_methods.Chainladder.__doc__
+class Chainladder(EstimatorMixin, _cl_Chainladder):
+    __doc__ = _cl_Chainladder.__doc__
 
 
-class MackChainladder(EstimatorMixin, cl_methods.MackChainladder):
-    __doc__ = cl_methods.MackChainladder.__doc__
+class MackChainladder(EstimatorMixin, _cl_MackChainladder):
+    __doc__ = _cl_MackChainladder.__doc__
 
 
-class BornhuetterFerguson(EstimatorMixin, cl_methods.BornhuetterFerguson):
-    __doc__ = cl_methods.BornhuetterFerguson.__doc__
+class BornhuetterFerguson(EstimatorMixin, _cl_BornhuetterFerguson):
+    __doc__ = _cl_BornhuetterFerguson.__doc__
 
     def __init__(self, apriori=1.0, apriori_sigma=0.0, random_state=None):
         super().__init__(
@@ -130,15 +141,15 @@ class BornhuetterFerguson(EstimatorMixin, cl_methods.BornhuetterFerguson):
         )
 
 
-class CapeCod(EstimatorMixin, cl_methods.CapeCod):
-    __doc__ = cl_methods.CapeCod.__doc__
+class CapeCod(EstimatorMixin, _cl_CapeCod):
+    __doc__ = _cl_CapeCod.__doc__
 
     def __init__(self, trend=0, decay=1):
         super().__init__(trend=trend, decay=decay)
 
 
-class Benktander(EstimatorMixin, cl_methods.Benktander):
-    __doc__ = cl_methods.Benktander.__doc__
+class Benktander(EstimatorMixin, _cl_Benktander):
+    __doc__ = _cl_Benktander.__doc__
 
     def __init__(self, apriori=1.0, n_iters=1, apriori_sigma=0, random_state=None):
         super().__init__(
@@ -149,8 +160,8 @@ class Benktander(EstimatorMixin, cl_methods.Benktander):
         )
 
 
-class VotingChainladder(EstimatorMixin, cl_workflow.VotingChainladder):
-    __doc__ = cl_workflow.VotingChainladder.__doc__
+class VotingChainladder(EstimatorMixin, _cl_VotingChainladder):
+    __doc__ = _cl_VotingChainladder.__doc__
 
     def __init__(
         self,
@@ -164,9 +175,7 @@ class VotingChainladder(EstimatorMixin, cl_workflow.VotingChainladder):
         estimators = [
             (
                 name,
-                getattr(globals()["cl_methods"], estimator.__class__.__name__)(
-                    **estimator.__dict__
-                ),
+                globals()["_cl_" + estimator.__class__.__name__](**estimator.__dict__),
             )
             for name, estimator in estimators
         ]

@@ -6,4 +6,4 @@
 The :mod:`tryangle.model_selection` module includes the TriangleSplit
 cross-validation splitting class.
 """
-from tryangle.model_selection.split import TriangleSplit # noqa (API Import)
+from tryangle.model_selection.split import TriangleSplit  # noqa (API Import)

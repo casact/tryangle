@@ -87,4 +87,5 @@ def test_softmax_gradient(auto_ensemble):
         -0.25 * np.ones((3, 5, 2, 2)) + 0.5 * np.eye(2),
     )
 
+
 # TODO: Expand tests on finalisation of autoensemble

@@ -6,6 +6,14 @@
 The :mod:`tryangle.ensemble` module includes ensemble-based methods for
 VotingChainladder
 """
-from tryangle.ensemble.base import AutoEnsemble # noqa (API Import)
-from tryangle.ensemble.optimizers import SGD, AdaGrad, RMSProp, Adam # noqa (API Import)
-from tryangle.ensemble.losses import MeanSquaredError, MeanAbsolutePercentageError # noqa (API Import)
+from tryangle.ensemble.base import AutoEnsemble  # noqa (API Import)
+from tryangle.ensemble.optimizers import (
+    SGD,
+    AdaGrad,
+    RMSProp,
+    Adam,
+)  # noqa (API Import)
+from tryangle.ensemble.losses import (
+    MeanSquaredError,
+    MeanAbsolutePercentageError,
+)  # noqa (API Import)

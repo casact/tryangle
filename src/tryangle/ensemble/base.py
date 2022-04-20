@@ -285,7 +285,7 @@ class AutoEnsemble(_BaseTriangleEnsemble):
         if self.weight_function is None:
             return t * self.weights + self.biases
         elif self.weight_function == "linear":
-        return np.matmul(t, self.weights) + self.biases
+            return np.matmul(t, self.weights) + self.biases
         elif self.weight_function[:4] == "poly":
             return (
                 sum(

@@ -30,9 +30,10 @@ class TryangleData:
         self.sample_weight = sample_weight
         self.shape = self.triangle.shape[2] * self.triangle.shape[3], 1
         self.latest_diagonal = triangle.cum_to_incr().latest_diagonal
-        self.actual = self.latest_diagonal[
-            self.latest_diagonal.origin < self.latest_diagonal.origin[-1]
-        ]
+        if self.latest_diagonal.shape != ():
+            self.actual = self.latest_diagonal[
+                self.latest_diagonal.origin < self.latest_diagonal.origin[-1]
+            ]
 
     def __getitem__(self, x):
         indices = np.full((self.shape[0],), False)

@@ -7,12 +7,10 @@ The :mod:`tryangle.core` module includes the TryangleData data structure
 and core chainladder methods.
 """
 from tryangle.core.base import TryangleData  # noqa (API Import)
-from tryangle.core.methods import ( # noqa (API Import)
+from tryangle.core.methods import (  # noqa (API Import)
     Chainladder,
     BornhuetterFerguson,
     CapeCod,
-    VotingChainladder
+    VotingChainladder,
 )
-from tryangle.core.methods import ( # noqa (API Import)
-    Development
-)
+from tryangle.core.methods import Development  # noqa (API Import)

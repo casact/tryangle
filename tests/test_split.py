@@ -24,7 +24,7 @@ def test_split():
         )
         assert (
             X[train_idx].sample_weight
-            == sample_weight[sample_weight.valuation.year <= val_years[i]]
+            == sample_weight[sample_weight.origin.year <= val_years[i]]
         )
 
 

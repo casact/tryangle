@@ -21,7 +21,7 @@ def load_sample(key, *args, **kwargs):
 
     if key in ["swiss", "cas", "sme"]:
         df = pd.read_csv(os.path.join(path, "data", key.lower() + "_train.csv"))
-        sample_weight = df[["origin", "premium"]].drop_duplicates()
+        sample_weight = df[["origin", "premium", "development"]].drop_duplicates()
         columns = ["claim"]
     else:
         raise KeyError(
@@ -42,12 +42,12 @@ def load_sample(key, *args, **kwargs):
         sample_weight,
         origin="origin",
         index=None,
-        development=None,
+        development="development",
         columns=["premium"],
         cumulative=True,
         *args,
         **kwargs
-    )
+    ).latest_diagonal
 
     return TryangleData(claim, sample_weight)
 
