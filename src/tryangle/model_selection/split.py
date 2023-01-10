@@ -28,7 +28,7 @@ class TriangleSplit(TimeSeriesSplit):
             [
                 date
                 for date in X.triangle.valuation.drop_duplicates().sort_values()
-                if date.date() <= valuation_date
+                if date.date() <= valuation_date.date()
             ]
         )
         for train, test in super().split(valuation_dates):
