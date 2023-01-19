@@ -1,3 +1,0 @@
-pandas>=0.23
-scikit-learn>=0.23
-chainladder>=0.8.12

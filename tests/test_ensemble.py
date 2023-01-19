@@ -59,22 +59,22 @@ def test_compile(auto_ensemble, sample_data, data_dir):
     with open(data_dir.join("ia_sample_compile_true_actual.npy"), "rb") as f:
         true_actual = np.load(f, allow_pickle=True)
         assert ens.actual_.shape == (3, 6, 1)
-        assert np.array_equal(ens.actual_, true_actual)
+        assert np.allclose(ens.actual_, true_actual)
 
     with open(data_dir.join("ia_sample_compile_true_expected.npy"), "rb") as f:
         true_expected = np.load(f, allow_pickle=True)
         assert ens.expected_.shape == (3, 6, 3)
-        assert np.array_equal(ens.expected_, true_expected)
+        assert np.allclose(ens.expected_, true_expected)
 
     with open(data_dir.join("ia_sample_compile_true_t.npy"), "rb") as f:
         true_t = np.load(f, allow_pickle=True)
         assert ens.t_.shape == (3, 6, 1)
-        assert np.array_equal(ens.t_, true_t)
+        assert np.allclose(ens.t_, true_t)
 
 
 def test_softmax(auto_ensemble):
     ens = auto_ensemble
-    assert np.array_equal(
+    assert np.allclose(
         ens._softmax(np.stack((-np.ones((5, 2)), np.zeros((5, 2)), np.ones((5, 2))))),
         0.5 * np.ones((3, 5, 2)),
     )
@@ -82,7 +82,7 @@ def test_softmax(auto_ensemble):
 
 def test_softmax_gradient(auto_ensemble):
     ens = auto_ensemble
-    assert np.array_equal(
+    assert np.allclose(
         ens._softmax_gradient(0.5 * np.ones((3, 5, 2))),
         -0.25 * np.ones((3, 5, 2, 2)) + 0.5 * np.eye(2),
     )

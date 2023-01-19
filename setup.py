@@ -10,9 +10,6 @@ name = "tryangle"
 url = "https://github.com/casact/tryangle"
 version = "0.2.1"  # Put this in __init__.py
 
-with open("requirements.txt", "r") as f:
-    dependencies = f.read().splitlines()
-
 with open("README.rst") as f:
     long_desc = f.read()
 
@@ -29,7 +26,11 @@ setup(
     description=descr,
     long_description=long_desc,
     long_description_content_type="text/x-rst",
-    install_requires=dependencies,
+    install_requires=[
+        "pandas>=1.0",
+        "scikit-learn>=1.0",
+        "chainladder>=0.8.12"
+    ],
     include_package_data=True,
     package_data={"data": [item for item in os.listdir("src/tryangle/utils/data")]},
     classifiers=[
