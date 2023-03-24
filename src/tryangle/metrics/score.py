@@ -25,10 +25,15 @@ class AVEScore(_BaseScorer):
 
     def _sample_weight(self, X, valuation_date):
         X_prior = X[X.triangle.valuation < valuation_date]
-        return np.abs(
-            X.triangle.latest_diagonal.to_frame().to_numpy()[:-1]
-            - X_prior.triangle.latest_diagonal.to_frame().to_numpy()
-        )
+        current = X.triangle.latest_diagonal.to_frame().to_numpy()
+        prior = X_prior.triangle.latest_diagonal.to_frame().to_numpy().reshape(-1, 1)
+
+        if X.triangle.shape[0] > 1:
+            current = current[:, :-1].reshape(-1, 1)
+        else:
+            current = current[:-1]
+
+        return np.abs(current - prior)
 
     def _score(self, method_caller, estimator, X, y_true=None, sample_weight=None):
         """Evaluate predicted target values for X relative to y_true."""  # TODO: Update docstring
@@ -60,9 +65,14 @@ class CDRScore(AVEScore):
 
         # ! TODO: Rewrite a better method that avoids fillna(0) as this could mask some error
         ibnr_k = estimator.fit_predict(X_k).ibnr_.to_frame().fillna(0).to_numpy()
-        ibnr_k_1 = (
-            estimator.fit_predict(X_k_1).ibnr_.to_frame().fillna(0).to_numpy()[:-1]
-        )
+        if X_k.triangle.shape[0] > 1:
+            ibnr_k = ibnr_k.reshape(-1, 1)
+
+        ibnr_k_1 = estimator.fit_predict(X_k_1).ibnr_.to_frame().fillna(0).to_numpy()
+        if X_k_1.triangle.shape[0] > 1:
+            ibnr_k_1 = ibnr_k_1[:, :-1].reshape(-1, 1)
+        else:
+            ibnr_k_1 = ibnr_k_1[:-1]
 
         if self.weighted:
             sample_weight = super()._sample_weight(X, valuation_date)

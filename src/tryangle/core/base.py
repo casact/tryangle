@@ -12,9 +12,14 @@ class TryangleData:
     and parallel processing.
 
     TryangleData can only hold chainladder ``Triangle``'s that are singular in
-    the first and second axis. That is, the shape of the ``Triangle`` must be
-    (1, 1, n_origin, n_development). The sample_weight must also be singular
-    in its development axis, i.e. a shape of (1, 1, n_origin, 1).
+    the second axis. That is, the shape of the ``Triangle`` must be
+    (n_samples, 1, n_origin, n_development). The first axis should hold bootstrapped
+    samples of the triangle to be assessed. THat is, `n_samples` is the number of
+    bootsrap samples. The sample_weight must also be singular in its development axis,
+    i.e. a shape of (n_samples, 1, n_origin, 1).
+
+    **New in 0.3.0: support for bootstrapped triangles by allowing more than 1 triangle
+    in the first dimension.**
 
     Parameters
     ----------
@@ -34,6 +39,8 @@ class TryangleData:
             self.actual = self.latest_diagonal[
                 self.latest_diagonal.origin < self.latest_diagonal.origin[-1]
             ]
+
+        self.valuation = triangle.valuation
 
     def __getitem__(self, x):
         indices = np.full((self.shape[0],), False)

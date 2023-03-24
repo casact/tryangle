@@ -2,6 +2,11 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+import numpy as np
+
+from chainladder.adjustments.bootstrap import (
+    BootstrapODPSample as _cl_BootstrapODPSample,
+)
 from chainladder.development.clark import ClarkLDF as _cl_ClarkLDF
 from chainladder.development.constant import (
     DevelopmentConstant as _cl_DevelopmentConstant,
@@ -16,6 +21,7 @@ from chainladder.methods.capecod import CapeCod as _cl_CapeCod
 from chainladder.methods.chainladder import Chainladder as _cl_Chainladder
 from chainladder.methods.mack import MackChainladder as _cl_MackChainladder
 from chainladder.workflow.voting import VotingChainladder as _cl_VotingChainladder
+
 from tryangle.core.base import TryangleData
 
 
@@ -45,6 +51,62 @@ class TransformerMixin:
 
     def transform(self, X):
         return TryangleData(super().transform(X.triangle), X.sample_weight)
+
+
+class BootstrapODPSample(TransformerMixin, _cl_BootstrapODPSample):
+    __doc__ = _cl_BootstrapODPSample.__doc__
+
+    def __init__(
+        self,
+        n_sims=1000,
+        n_periods=-1,
+        hat_adj=True,
+        drop=None,
+        drop_high=None,
+        drop_low=None,
+        drop_valuation=None,
+        random_state=None,
+    ):
+        super().__init__(
+            n_sims=n_sims,
+            n_periods=n_periods,
+            hat_adj=hat_adj,
+            drop=drop,
+            drop_high=drop_high,
+            drop_low=drop_low,
+            drop_valuation=drop_valuation,
+            random_state=random_state,
+        )
+
+    def transform(self, X):
+        """
+        Parameters
+        ----------
+        X: Triangle
+            The triangle to be transformed
+        Returns
+        -------
+            X_new: New triangle with transformed attributes.
+        """
+        X_new_triangle = X.triangle.copy()
+        X_new_triangle = self.resampled_triangles_
+        X_new_triangle.scale_ = self.scale_
+        X_new_triangle.random_state = self.random_state
+
+        if X.sample_weight is not None:
+            repeated_sample_weights = np.repeat(
+                X.sample_weight.to_frame().to_numpy()[np.newaxis, np.newaxis, ...],
+                10,
+                axis=0,
+            )
+            X_new_sample_weight = X.sample_weight.copy()
+            X_new_sample_weight.kdims = np.arange(10)
+            X_new_sample_weight.values = repeated_sample_weights
+            X_new_sample_weight._set_slicers()
+        else:
+            X_new_sample_weight = None
+
+        return TryangleData(X_new_triangle, X_new_sample_weight)
 
 
 class Development(TransformerMixin, _cl_Development):
