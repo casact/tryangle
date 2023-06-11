@@ -30,7 +30,7 @@ test-publish:
 	$(VENV); python -m twine upload --repository testpypi dist/* --verbose
 
 publish:
-	$(VENV); python -m twine --repository tryangle dist/* --verbose
+	$(VENV); python -m twine upload --repository tryangle dist/* --verbose
 
 setup:
 	virtualenv .venv
