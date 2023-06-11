@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=67.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tryangle"
+version = "0.2.2"
+description = "Tryangle Package - Scientific P&C Loss Reserving"
+readme = "README.md"
+maintainers = [{ name = "Caesar Balona", email = "caesar.balona@gmail.com" }]
+classifiers = [
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = ["chainladder<=0.8.14", "pandas<2.0", "scikit-learn>=1.2"]
+license = { text = "MPL-2.0" }
+requires-python = ">=3.11"
+
+[project.urls]
+Homepage = "https://github.com/casact/tryangle"
+
+[project.optional-dependencies]
+dev = ["ruff", "black", "mypy", "pytest", "tox", "twine"]
+
